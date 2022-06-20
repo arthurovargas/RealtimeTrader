@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1092272232821",
+    "project_id": "fir-tutorial-d45a2",
+    "storage_bucket": "fir-tutorial-d45a2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092272232821:android:9c336e7380fc3e563fdb3c",
+        "android_client_info": {
+          "package_name": "com.project.realtimetrader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1092272232821-9m6cchb4aunak22gk3tmodi35n1is9v0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLvbN8rQDeSCgYYidSSMrk0gqwVy9cxMs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1092272232821-9m6cchb4aunak22gk3tmodi35n1is9v0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
