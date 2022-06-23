@@ -3,6 +3,7 @@ package com.project.realtimetrader
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import com.google.android.material.snackbar.Snackbar
@@ -40,7 +41,6 @@ class LoginActivity : AppCompatActivity() {
                 val user = User()
                 user.username = username.toString()
                 saveUserAndStartMainActivity(user, view)
-                startMainActivity(username.text.toString())
             } else {
                 showErrorMessage(view)
                 view.isEnabled = true
@@ -56,13 +56,14 @@ class LoginActivity : AppCompatActivity() {
             object :
                 Callback<Void> {
                 override fun onSuccess(result: Void?) {
-                    TODO("Not yet implemented")
+                    startMainActivity(user.username)
                 }
 
                 override fun onFailed(exception: Exception) {
-                    TODO("Not yet implemented")
+                    showErrorMessage(view)
+                    Log.e(TAG, "error", exception)
+                    view.isEnabled = true
                 }
-
             })
     }
 
