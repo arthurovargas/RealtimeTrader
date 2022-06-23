@@ -34,12 +34,12 @@ class LoginActivity : AppCompatActivity() {
 
     fun onStartClicked(view: View) {
         view.isEnabled = false // Deshabilitar el boton Start
-        val username : EditText = findViewById(R.id.username)
+        val username : String = findViewById<EditText?>(R.id.usernameLogin).text.toString()
+        // val username = R.id.usernameLogin.toString()
         auth.signInAnonymously().addOnCompleteListener { task ->
             if (task.isSuccessful){
-                username.text.toString()
                 val user = User()
-                user.username = username.toString()
+                user.username = username
                 saveUserAndStartMainActivity(user, view)
             } else {
                 showErrorMessage(view)
