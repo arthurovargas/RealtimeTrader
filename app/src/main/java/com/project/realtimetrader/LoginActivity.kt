@@ -38,9 +38,22 @@ class LoginActivity : AppCompatActivity() {
         // val username = R.id.usernameLogin.toString()
         auth.signInAnonymously().addOnCompleteListener { task ->
             if (task.isSuccessful){
-                val user = User()
-                user.username = username
-                saveUserAndStartMainActivity(user, view)
+                firestoreService.finUserById(username, object : Callback<User>{
+                    override fun onSuccess(result: User?) {
+                        if (result == null){
+                            val user = User()
+                            user.username = username
+                            saveUserAndStartMainActivity(user, view)
+                        } else{
+                            startMainActivity(username)
+                        }
+                    }
+
+                    override fun onFailed(exception: Exception) {
+                        showErrorMessage(view)
+                    }
+                })
+
             } else {
                 showErrorMessage(view)
                 view.isEnabled = true

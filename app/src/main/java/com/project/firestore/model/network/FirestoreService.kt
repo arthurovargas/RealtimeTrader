@@ -3,6 +3,7 @@ package com.project.firestore.model.network
 import com.google.firebase.firestore.FirebaseFirestore
 import com.project.firestore.model.Crypto
 import com.project.firestore.model.User
+import kotlinx.coroutines.handleCoroutineException
 
 const val CRYPTO_COLLECTION_NAME = "cryptos"
 const val USER_COLLECTION_NAME = "users"
@@ -29,5 +30,30 @@ class FirestoreService(val firebaseFirestore : FirebaseFirestore){
     fun updateCrypto(crypto: Crypto){
         firebaseFirestore.collection(CRYPTO_COLLECTION_NAME).document(crypto.getDocumentId())
             .update("available", crypto.available)
+    }
+
+    fun getCryptos(callback: Callback<List<Crypto>>?){
+        firebaseFirestore.collection(CRYPTO_COLLECTION_NAME)
+            .get()
+            .addOnSuccessListener { result ->
+                for(document in result){
+                    val cryptoList = result.toObjects(Crypto::class.java)
+                    callback?.onSuccess(cryptoList)
+                }
+            }
+            .addOnFailureListener { exception -> callback?.onFailed(exception) }
+    }
+
+    fun finUserById(id:String, callback: Callback<User>?){
+        firebaseFirestore.collection(USER_COLLECTION_NAME).document(id)
+            .get()
+            .addOnSuccessListener { result ->
+                if (result.data != null){
+                    callback?.onSuccess(result.toObject(User::class.java))
+                } else {
+                    callback?.onSuccess(null)
+                }
+            }
+            .addOnFailureListener { exception -> callback?.onFailed(exception) }
     }
 }
