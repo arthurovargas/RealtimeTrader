@@ -38,8 +38,10 @@ class LoginActivity : AppCompatActivity() {
         // val username = R.id.usernameLogin.toString()
         auth.signInAnonymously().addOnCompleteListener { task ->
             if (task.isSuccessful){
+                // Lectura de documentos en Firestore
                 firestoreService.finUserById(username, object : Callback<User>{
                     override fun onSuccess(result: User?) {
+                        //Verificación del usuario en Firestore
                         if (result == null){
                             val user = User()
                             user.username = username
@@ -48,12 +50,10 @@ class LoginActivity : AppCompatActivity() {
                             startMainActivity(username)
                         }
                     }
-
                     override fun onFailed(exception: Exception) {
                         showErrorMessage(view)
                     }
                 })
-
             } else {
                 showErrorMessage(view)
                 view.isEnabled = true
