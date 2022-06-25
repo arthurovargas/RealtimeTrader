@@ -52,6 +52,8 @@ class LoginActivity : AppCompatActivity() {
                     }
                     override fun onFailed(exception: Exception) {
                         showErrorMessage(view)
+                        view.isEnabled = true
+
                     }
                 })
             } else {
