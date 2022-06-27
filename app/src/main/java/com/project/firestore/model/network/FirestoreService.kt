@@ -1,6 +1,7 @@
 package com.project.firestore.model.network
 
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 import com.project.firestore.model.Crypto
 import com.project.firestore.model.User
 import kotlinx.coroutines.handleCoroutineException

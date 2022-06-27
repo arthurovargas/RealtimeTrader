@@ -49,8 +49,17 @@ class TraderActivity : AppCompatActivity(), CryptosAdapterListener {
         fab.setOnClickListener { view ->
             Snackbar.make(view, getString(R.string.generating_new_cryptos), Snackbar.LENGTH_SHORT)
                 .setAction("Info", null).show()
+            generateCryptoCurrenciesRandom()
         }
 
+    }
+
+    private fun generateCryptoCurrenciesRandom() {
+        for (crypto in cryptosAdapter.cryptoList){
+            val amount = (1..10).random()
+            crypto.available += amount
+            firestoreService.updateCrypto(crypto)
+        }
     }
 
     private fun loadCryptos() {
@@ -62,7 +71,7 @@ class TraderActivity : AppCompatActivity(), CryptosAdapterListener {
                         override fun onSuccess(result: User?) {
                             user = result
                             if (user?.cryptosList == null){
-                                var userCryptoList = mutableListOf<Crypto>()
+                                val userCryptoList = mutableListOf<Crypto>()
 
                                 for (crypto in cryptoList!!) {
                                     val cryptoUser = Crypto()
@@ -128,7 +137,18 @@ class TraderActivity : AppCompatActivity(), CryptosAdapterListener {
     }
 
     override fun onBuyCryptoClicked(crypto: Crypto) {
-        TODO("Not yet implemented")
+        if (crypto.available > 0 ){
+            for (userCrypto in user?.cryptosList!!){
+                if (userCrypto.name == crypto.name){
+                    userCrypto.available += 1
+                    break
+                }
+            }
+            crypto.available --
+            // Actualización de la compra en la base de datos
+            firestoreService.updateUser(user!!, null)
+            firestoreService.updateCrypto(crypto)
+        }
     }
 
     fun showGeneralServerErrorMessage() {
