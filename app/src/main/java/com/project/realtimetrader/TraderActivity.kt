@@ -18,6 +18,7 @@ import com.project.firestore.model.Crypto
 import com.project.firestore.model.User
 import com.project.firestore.model.network.Callback
 import com.project.firestore.model.network.FirestoreService
+import com.project.firestore.model.network.RealtimeDataListener
 import com.squareup.picasso.Picasso
 import java.lang.Exception
 
@@ -84,6 +85,7 @@ class TraderActivity : AppCompatActivity(), CryptosAdapterListener {
                                 user?.let { firestoreService.updateUser(it, null) }
                             }
                             loadUserCryptos()
+                            addRealtimeDatabaseListeners(user, cryptoList!!)
                         }
 
                         override fun onFailed(exception: Exception) {
@@ -106,6 +108,37 @@ class TraderActivity : AppCompatActivity(), CryptosAdapterListener {
             }
 
         })
+    }
+
+    private fun addRealtimeDatabaseListeners(user: User?, cryptoList: List<Crypto>) {
+        user?.let {
+            firestoreService.listenForUpdates(it,object: RealtimeDataListener<User>{
+                override fun onDataChange(updateData: User) {
+                    this@TraderActivity.user = updateData
+                    loadUserCryptos()
+                }
+
+                override fun onError(exception: Exception) {
+                    showGeneralServerErrorMessage()
+                }
+
+            })
+            firestoreService.listenForUpdates(cryptoList, object : RealtimeDataListener<Crypto>{
+                override fun onDataChange(updateData: Crypto) {
+                    for ((pos, crypto) in cryptosAdapter.cryptoList.withIndex()){
+                        if (crypto.name == updateData.name){
+                            crypto.available = updateData.available
+                            cryptosAdapter.notifyItemChanged(pos)
+                        }
+                    }
+                }
+
+                override fun onError(exception: Exception) {
+                    showGeneralServerErrorMessage()
+                }
+
+            })
+        }
     }
 
     private fun loadUserCryptos() {
